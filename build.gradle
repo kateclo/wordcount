@@ -1,0 +1,172 @@
+buildscript {
+
+    apply from: "${rootDir}/gradle/dependencies.gradle"
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${versions.springBoot}")
+        classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:${versions.spotbugsPlugin}"
+        classpath "org.owasp:dependency-check-gradle:${versions.dependencyCheck}"
+    }
+
+}
+
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
+group 'com.demo.wordcount'
+version '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = '11'
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'checkstyle'
+apply plugin: "com.github.spotbugs"
+apply plugin: "jacoco"
+apply plugin: "org.owasp.dependencycheck"
+apply plugin: 'idea'
+
+
+springBoot {
+    buildInfo {
+        properties {
+            version = version
+            name = 'WordCount'
+        }
+    }
+}
+
+
+bootRun {
+    systemProperties = System.properties
+}
+
+spotbugs {
+    toolVersion = "4.4.1"
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "low"
+    excludeFilter = file("$rootDir/config/spotbugs/exclude.xml")
+    maxHeapSize = '4g'
+}
+
+
+spotbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+spotbugsTest {
+    enabled = true
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+
+checkstyle {
+    toolVersion "${versions.checkstyle}"
+    configFile file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
+
+checkstyleMain {
+    source = 'src/main/java'
+}
+
+checkstyleTest {
+    source = 'src/test/groovy'
+}
+
+// tasks.named('test') {
+test {
+    useJUnitPlatform()
+}
+
+
+tasks.check.dependsOn(tasks.dependencyCheckAnalyze)
+
+apply from: "${rootDir}/gradle/jacoco.gradle"
+
+
+
+
+// OWASP Dependency Check settings
+dependencyCheck {
+    // let's ignore errors to make builds in Jenkins more stable
+    failOnError = false
+
+    // OWASP Dependency Check plugin for Jenkins needs an XML report,
+    // but humans may also need an HTML one
+    format = 'ALL'
+
+    // set up a quality gate for vulnerabilities with high severity level:
+    //   let's consider that a vulnerability has a high severity level if its CVSS score is higher than 7
+    //   the build is going to fail if vulnerabilities with high severity level found
+    failBuildOnCVSS = 10
+
+    // specify a list of known issues which contain:
+    //   false-positives
+    //   confirmed vulnerabilities which are not fixed yet, but we have a ticket for that
+    suppressionFile = 'config/dependencyCheck/dependency-check-known-issues.xml'
+
+    analyzers {
+        nodeEnabled = false
+        nodeAuditEnabled = false
+    }
+}
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jacksonDatabind}"
+    implementation "com.fasterxml.jackson:jackson-bom:${versions.jacksonBom}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${versions.jackson}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
+
+    implementation "com.github.spotbugs:spotbugs:${versions.spotbugs}"
+
+    implementation "commons-io:commons-io:${versions.commonsIO}"
+
+    implementation "org.apache.httpcomponents:httpclient:${versions.httpClient}"
+
+    implementation "org.apache.tomcat.embed:tomcat-embed-core:${versions.tomcatEmbed}"
+    implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${versions.tomcatEmbed}"
+    implementation "org.yaml:snakeyaml:${versions.snakeyaml}"
+
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+
+
+    implementation "org.springdoc:springdoc-openapi-ui:${versions.openApi}"
+
+    compileOnly "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-web:${versions.springBoot}"
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${versions.springBoot}") {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    testImplementation  "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
+
+    testImplementation "org.codehaus.groovy:groovy-all:${versions.groovy}"
+    testImplementation  "org.spockframework:spock-core:${versions.spock}"
+    testImplementation  "org.spockframework:spock-spring:${versions.spock}"
+    testImplementation  'org.springframework.boot:spring-boot-starter-test'
+}
+

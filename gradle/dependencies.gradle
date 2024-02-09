@@ -1,0 +1,24 @@
+ext {
+    versions = [
+            checkstyle: '8.45.1',
+            commonsIO: '2.11.0',
+            dependencyCheck: '7.1.0.1',
+            groovy: '3.0.18',
+            httpClient: '4.5.13',
+            jackson: '2.13.2',
+            jacksonBom: '2.13.2.20220324',
+            jacksonDatabind: '2.13.2.1',
+            junit: '5.8.2',
+            lombok: '1.18.24',
+            openApi: '1.6.11',
+            snakeyaml: '2.0',
+            spock: '2.0-groovy-3.0',
+            spotbugs: '4.7.3',
+            spotbugsPlugin: '4.5.1',
+            springBoot: '2.7.18',
+            springDataEnvers: '2.4.0',
+            springTest: '5.3.12',
+            tomcatEmbed: '9.0.84'
+    ]
+}
+

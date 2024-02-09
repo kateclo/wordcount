@@ -1,0 +1,15 @@
+<FindBugsFilter>
+    <Match>
+        <Or>
+            <Source name="~.*Spec\.groovy*"/>
+            <Source name="~.*Test\.groovy*"/>
+            <Source name="~.*Fixture\.groovy*"/>
+        </Or>
+    </Match>
+    <Match>
+        <Or>
+            <Package name="~com\.demo\.wordcount\.data\.response"/>
+            <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+</FindBugsFilter>
