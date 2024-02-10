@@ -24,7 +24,7 @@ public class UrlUtil {
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
 
-    public static boolean isLinkLocalFilepathAndExists(String filepathToCheck) {
+    public static boolean isLocalFilepathAndExists(String filepathToCheck) {
         try {
             String cleanedFilepath = filepathToCheck;
 
