@@ -20,12 +20,12 @@ public abstract class WordCounter {
     public static final String REG_EX_NON_ALPHABET_AND_NON_NUMBER = "[^a-zA-Z0-9]";
     public static final int DEFAULT_COUNT_VALUE = 1;
 
-    public abstract Map<String, Integer> retrieveTopKWords(Path sourceFilepath, int k) throws FileReadingException;
+    public abstract Map<String, Integer> retrieveTopFrequentWords(Path sourceFilepath, int frequency) throws FileReadingException;
 
-    protected Map<String, Integer> retrieveTopKWordsAndSortByDescendingOrder(@NonNull Map<String, Integer> wordCountMap, int k) {
+    protected Map<String, Integer> retrieveTopFrequentWordsAndSortByDescendingOrder(@NonNull Map<String, Integer> wordCountMap, int frequency) {
         return wordCountMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .limit(k)
+                .limit(frequency)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 

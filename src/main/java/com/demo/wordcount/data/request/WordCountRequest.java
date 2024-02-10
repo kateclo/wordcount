@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 
 @Getter
@@ -14,15 +13,12 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WordCountRequest {
-    public static final String KVALUE_PARAM_NAME = "k_value";
+    public static final String FREQUENCY_PARAM_NAME = "k_value";
     public static final String SOURCE_PARAM_NAME = "source";
 
     @NotEmpty(message = "source must not be empty or null")
     private String source;
 
     @JsonProperty("k_value")
-    private Integer kvalue;
-
-    @Nullable
-    private String mode;
+    private Integer frequency;
 }

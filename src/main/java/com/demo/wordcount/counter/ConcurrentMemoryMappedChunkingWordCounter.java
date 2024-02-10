@@ -30,9 +30,9 @@ public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCount
     private static final int MAX_CONCURRENT_TASKS = 10;
 
     @Override
-    public Map<String, Integer> retrieveTopKWords(Path sourceFilepath, int k) throws FileReadingException {
+    public Map<String, Integer> retrieveTopFrequentWords(Path sourceFilepath, int frequency) throws FileReadingException {
 
-        log.info("[CONCURRENT_MEM_MAPPED] Finding top K words in a file - START");
+        log.info("[CONCURRENT_MEM_MAPPED] Finding top frequent words in a file - START");
         log.info(String.format("[CONCURRENT_MEM_MAPPED] File: %s", sourceFilepath));
 
         ConcurrentHashMap<String, Integer> wordCounts = new ConcurrentHashMap<>();
@@ -49,8 +49,8 @@ public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCount
         }
 
 
-        log.info("[CONCURRENT_MEM_MAPPED] Finding top K words in a file - END");
-        return retrieveTopKWordsAndSortByDescendingOrder(wordCounts, k);
+        log.info("[CONCURRENT_MEM_MAPPED] Finding top frequent words in a file - END");
+        return retrieveTopFrequentWordsAndSortByDescendingOrder(wordCounts, frequency);
     }
 
     private void processMappedBuffer(MappedByteBuffer mapperBuffer, Map<String, Integer> wordCounts, long fileSize) throws FileReadingException {

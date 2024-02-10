@@ -8,17 +8,19 @@ import com.demo.wordcount.exception.UnsupportedFileTypeException;
 import lombok.NonNull;
 
 public class WordCountRequestValidator {
-    public static final int MIN_KVALUE = 1;
+    public static final int MIN_FREQUENCY_VALUE = 1;
 
     public static void validate(@NonNull WordCountRequest request) throws IllegalArgumentException {
-        if (!FileUtil.isTextFile(request.getSource())) {
+
+        // TODO: call validate()
+        if (!FileUtil.hasTxtFileExtension(request.getSource())) {
             throw new UnsupportedFileTypeException(WordCountRequest.SOURCE_PARAM_NAME, request.getSource());
         }
 
-        if (request.getKvalue() == null) {
-            throw new MinValueException(WordCountRequest.KVALUE_PARAM_NAME, MIN_KVALUE);
-        } else if (request.getKvalue() < MIN_KVALUE) {
-            throw new MinValueException(WordCountRequest.KVALUE_PARAM_NAME, request.getKvalue(), MIN_KVALUE);
+        if (request.getFrequency() == null) {
+            throw new MinValueException(WordCountRequest.FREQUENCY_PARAM_NAME, MIN_FREQUENCY_VALUE);
+        } else if (request.getFrequency() < MIN_FREQUENCY_VALUE) {
+            throw new MinValueException(WordCountRequest.FREQUENCY_PARAM_NAME, request.getFrequency(), MIN_FREQUENCY_VALUE);
         }
     }
 }

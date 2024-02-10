@@ -17,8 +17,8 @@ public class FileBufferChunkingWordCounter extends ChunkingWordCounter {
 
 
     @Override
-    public Map<String, Integer> retrieveTopKWords(@NonNull Path sourceFilepath, int k) throws FileReadingException {
-        log.info("[CHUNKED_IO] Finding top K words in a file - START");
+    public Map<String, Integer> retrieveTopFrequentWords(@NonNull Path sourceFilepath, int frequency) throws FileReadingException {
+        log.info("[CHUNKED_IO] Finding top frequent words in a file - START");
         log.info(String.format("[CHUNKED] File: %s", sourceFilepath));
 
         Map<String, Integer> wordCountMap = new ConcurrentHashMap<>();
@@ -60,8 +60,8 @@ public class FileBufferChunkingWordCounter extends ChunkingWordCounter {
             throw new FileReadingException(sourceFilepath.toString());
         }
 
-        log.info("[CHUNKED] Finding top K words in a file - END");
-        return retrieveTopKWordsAndSortByDescendingOrder(wordCountMap, k);
+        log.info("[CHUNKED] Finding top frequent words in a file - END");
+        return retrieveTopFrequentWordsAndSortByDescendingOrder(wordCountMap, frequency);
     }
 
 }

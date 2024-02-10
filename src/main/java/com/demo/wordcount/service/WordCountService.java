@@ -41,9 +41,8 @@ public class WordCountService {
         FileDownloader fileDownloader = FileDownloaderFactory.getFileDownloader(request.getSource());
         Path downloadedFile = fileDownloader.download(request.getSource(), destinationDir.toString());
 
-        String mode = (request.getMode() == null) ? counterMode : request.getMode();
-        WordCounter wordCounter = WordCounterFactory.getWordCounter(mode);
-        Map<String, Integer> sortedData = wordCounter.retrieveTopKWords(downloadedFile, request.getKvalue());
+        WordCounter wordCounter = WordCounterFactory.getWordCounter(counterMode);
+        Map<String, Integer> sortedData = wordCounter.retrieveTopFrequentWords(downloadedFile, request.getFrequency());
 
         return sortedData.entrySet().stream()
                 .map(entry -> new WordCountDetails(entry.getKey(), entry.getValue()))

@@ -16,8 +16,8 @@ public class ConcurrentFileBufferWordCounter extends WordCounter {
     @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
             justification = "Pointing to a null checking in parallel() and countUniqueAndValidWords(). Checks are okay.")
     @Override
-    public Map<String, Integer> retrieveTopKWords(Path sourceFilepath, int k) throws FileReadingException {
-        log.info("[CONCURRENT] Finding top K words in a file - START");
+    public Map<String, Integer> retrieveTopFrequentWords(Path sourceFilepath, int frequency) throws FileReadingException {
+        log.info("[CONCURRENT] Finding top frequent words in a file - START");
         log.info(String.format("[CONCURRENT] File: %s", sourceFilepath));
 
         ConcurrentHashMap<String, Integer> wordCountMap = new ConcurrentHashMap<>();
@@ -29,7 +29,7 @@ public class ConcurrentFileBufferWordCounter extends WordCounter {
         }
 
 
-        log.info("[CONCURRENT] Finding top K words in a file - END");
-        return retrieveTopKWordsAndSortByDescendingOrder(wordCountMap, k);
+        log.info("[CONCURRENT] Finding top frequent words in a file - END");
+        return retrieveTopFrequentWordsAndSortByDescendingOrder(wordCountMap, frequency);
     }
 }
