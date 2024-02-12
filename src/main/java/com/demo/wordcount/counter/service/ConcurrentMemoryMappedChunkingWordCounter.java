@@ -1,8 +1,13 @@
-package com.demo.wordcount.counter;
+package com.demo.wordcount.counter.service;
 
 import com.demo.wordcount.common.CommonConstants;
+import com.demo.wordcount.counter.ChunkingWordCounter;
 import com.demo.wordcount.exception.FileReadingException;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,27 +18,37 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 
 @Slf4j
+@Service
 public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCounter {
-
     private static final int MAX_CONCURRENT_TASKS = 10;
 
-    @Override
-    public Map<String, Integer> retrieveTopFrequentWords(Path sourceFilepath, int frequency) throws FileReadingException {
+    @Value("${api.word.count.chunked.buffer.bytes.size:1048576}")
+    private int bufferSizeInBytes;
 
-        log.info("[CONCURRENT_MEM_MAPPED] Finding top frequent words in a file - START");
-        log.info(String.format("[CONCURRENT_MEM_MAPPED] File: %s", sourceFilepath));
+    @Value("${api.word.count.chunked.word.maxLength:100}")
+    private int maxChunkedWordLength;
+
+    @Getter
+    private final String mode = "CONCURRENT_CHUNKED";
+
+    @Override
+    public Map<String, Integer> retrieveTopFrequentWords(@NonNull Path sourceFilepath, int frequency) throws FileReadingException {
+
+        log.info("[CONCURRENT_CHUNKED] Finding top frequent words in a file - START");
+        log.info(String.format("[CONCURRENT_CHUNKED] File: %s", sourceFilepath));
 
         ConcurrentHashMap<String, Integer> wordCounts = new ConcurrentHashMap<>();
 
@@ -44,12 +59,12 @@ public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCount
 
             processMappedBuffer(buffer, wordCounts, fileSize);
 
-        } catch (IOException | SecurityException | IndexOutOfBoundsException | FileReadingException e) {
+        } catch (IOException | SecurityException | IndexOutOfBoundsException | FileReadingException | NullPointerException e) {
             throw new FileReadingException(sourceFilepath.toString());
         }
 
 
-        log.info("[CONCURRENT_MEM_MAPPED] Finding top frequent words in a file - END");
+        log.info("[CONCURRENT_CHUNKED] Finding top frequent words in a file - END");
         return retrieveTopFrequentWordsAndSortByDescendingOrder(wordCounts, frequency);
     }
 
@@ -59,7 +74,7 @@ public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCount
         long remainingSizeToProc = 0;
         long bytesToRead = 0;
 
-        int bufferCapacity = BUFFER_SIZE + MAX_WORD_LENGTH;
+        int bufferCapacity = bufferSizeInBytes + maxChunkedWordLength;
         int actualBufferCapacity = 0;
         int overlapLength = 0;
 
@@ -68,7 +83,7 @@ public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCount
         List<Future<Map<String, Integer>>> futures = new ArrayList<>();
 
 
-        while (position < fileSize) {
+        while (position < fileSize && bufferCapacity > 0) {
 
             mapperBuffer.position((int) position);
 
@@ -76,7 +91,7 @@ public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCount
             ByteBuffer buffer = ByteBuffer.allocate(bufferCapacity);
 
             remainingSizeToProc = fileSize - position;
-            bytesToRead = Math.min(BUFFER_SIZE, remainingSizeToProc);
+            bytesToRead = Math.min(bufferSizeInBytes, remainingSizeToProc);
             actualBufferCapacity = Math.min(bufferCapacity, (int) remainingSizeToProc);
 
 
@@ -89,7 +104,7 @@ public class ConcurrentMemoryMappedChunkingWordCounter extends ChunkingWordCount
 
 
             // Consider scenario where the last word gets cut-off from in the current chunk
-            overlapLength = handleOverlappedWord(buffer, fileSize, position, bytesToRead, bufferCapacity);
+            overlapLength = handleOverlappedWord(buffer, fileSize, position, bytesToRead, bufferCapacity, maxChunkedWordLength);
 
 
             // Add the chunk for processing

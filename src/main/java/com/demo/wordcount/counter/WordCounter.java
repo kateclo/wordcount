@@ -12,13 +12,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class WordCounter {
-    public enum Mode {
-        CONCURRENT, CHUNKED, MEM_MAPPED, CONCURRENT_MEM_MAPPED
-    }
+    protected static final  String REG_EX_WORD_BOUNDARY = "\\b+";
+    protected static final String REG_EX_NON_ALPHABET_AND_NON_NUMBER = "[^a-zA-Z0-9]";
+    protected static final int DEFAULT_COUNT_VALUE = 1;
 
-    public static final String REG_EX_WORD_BOUNDARY = "\\b+";
-    public static final String REG_EX_NON_ALPHABET_AND_NON_NUMBER = "[^a-zA-Z0-9]";
-    public static final int DEFAULT_COUNT_VALUE = 1;
+
+    public abstract String getMode();
 
     public abstract Map<String, Integer> retrieveTopFrequentWords(Path sourceFilepath, int frequency) throws FileReadingException;
 
