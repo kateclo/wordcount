@@ -1,6 +1,6 @@
 package com.demo.wordcount.common
 
-import com.demo.wordcount.exception.UnsupportedLinkException
+import com.demo.wordcount.exception.UnresolvedSourceException
 import org.apache.commons.lang3.RandomStringUtils
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -9,7 +9,7 @@ import java.nio.file.Paths
 
 class FileDownloaderFactoryTest extends Specification {
 
-    def "should be able to return LocalFileDownloader if local file exists"() {
+    def "should be able to return LocalFileDownloader if link is local file and exists"() {
         given:
         String path = Paths.get(System.getProperty("user.dir")).resolve("settings.gradle").toString()
 
@@ -40,7 +40,7 @@ class FileDownloaderFactoryTest extends Specification {
         FileDownloaderFactory.getFileDownloader(path)
 
         then:
-        thrown UnsupportedLinkException
+        thrown UnresolvedSourceException
 
         where:
         scenario                       | path
