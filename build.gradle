@@ -156,6 +156,8 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-ui:${versions.openApi}"
 
     compileOnly "org.springframework.boot:spring-boot-starter-validation"
+
+    implementation "org.springframework.boot:spring-boot-starter-security:${versions.springBoot}"
     implementation "org.springframework.boot:spring-boot-starter-web:${versions.springBoot}"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:${versions.springBoot}") {
