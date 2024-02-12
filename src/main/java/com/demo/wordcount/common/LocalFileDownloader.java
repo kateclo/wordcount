@@ -1,6 +1,5 @@
 package com.demo.wordcount.common;
 
-import com.demo.wordcount.exception.FileCreationException;
 import com.demo.wordcount.exception.FileDownloadException;
 import lombok.extern.slf4j.Slf4j;
 

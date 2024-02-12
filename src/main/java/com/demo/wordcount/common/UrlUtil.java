@@ -36,7 +36,7 @@ public class UrlUtil {
             Path filepath = Paths.get(cleanedFilepath);
             return filepath.isAbsolute() && filepath.toFile().isFile();
 
-        } catch (InvalidPathException | NullPointerException e) {
+        } catch (InvalidPathException | NullPointerException | IndexOutOfBoundsException e) {
             log.debug("Not a local filepath : " + filepathToCheck);
             return false;
         }

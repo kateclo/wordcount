@@ -58,6 +58,18 @@ public class ErrorControllerAdvice {
                 .body(Response.error(SC_INTERNAL_SERVER_ERROR, ex.getMessage()));
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<Object> handleNullPointerException(NullPointerException ex, ServletWebRequest request) {
+        String customErrorMessage = String.format("Encountered NPE in processing %s request to %s",
+                request.getHttpMethod(),
+                getRequestUri(request));
+        log.error("[Internal Error] " + customErrorMessage, ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Response.error(SC_INTERNAL_SERVER_ERROR, customErrorMessage));
+    }
+
     private Map<String, String> getErrors(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         Map<String, String> errors = new HashMap<>();
