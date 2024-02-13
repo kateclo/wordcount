@@ -1,0 +1,59 @@
+import groovy.sql.Sql
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+configurations {
+    driver
+}
+
+dependencies {
+    driver "mysql:mysql-connector-java:${versions.mysql}"
+}
+
+
+URLClassLoader loader = GroovyObject.class.classLoader
+configurations.driver.each { File file ->
+    loader.addURL(file.toURI().toURL())
+}
+
+task dropLocalSchema {
+    group = 'database'
+    doFirst {
+        def sql = sqlConnection()
+        String schema = project.hasProperty('schema') ? project.property('schema') : 'wordcount'
+
+        println("Dropping schema:$schema")
+        sql.execute("DROP SCHEMA if exists ${schema}".toString())
+    }
+}
+
+task dropReadOnlyUser {
+    group = 'database'
+    doFirst {
+        def sql = sqlConnection()
+
+        println("Dropping read-only user: wordcount_read")
+        if (sql.rows ("select * from mysql.user where user = 'wordcount_read'").size() != 0) {
+            sql.execute("DROP USER 'wordcount_read'@'%';")
+        }
+    }
+}
+
+flywayClean.dependsOn tasks.dropReadOnlyUser
+
+def sqlConnection() {
+    String password = System.getenv('DB_PASSWORD')
+    String username = System.getenv('DB_USERNAME')
+    String connectionString = System.getenv('DB_CONNECTION_STRING')
+
+    Sql.newInstance(connectionString, username, password, 'com.mysql.cj.jdbc.Driver')
+}

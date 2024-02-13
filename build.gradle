@@ -11,6 +11,7 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${versions.springBoot}")
         classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:${versions.spotbugsPlugin}"
         classpath "org.owasp:dependency-check-gradle:${versions.dependencyCheck}"
+        classpath "mysql:mysql-connector-java:${versions.mysql}"
     }
 
 }
@@ -18,6 +19,7 @@ buildscript {
 plugins {
     id 'java'
     id 'groovy'
+    id "org.flywaydb.flyway" version "7.14.1"
 }
 
 group 'com.demo.wordcount'
@@ -48,6 +50,16 @@ springBoot {
 
 bootRun {
     systemProperties = System.properties
+}
+
+flyway {
+    url = System.getenv('DB_CONNECTION_STRING')
+    user = System.getenv('DB_USERNAME')
+    password = System.getenv('DB_PASSWORD')
+    schemas = ['wordcount']
+
+    // Default placeholders for local / ci gradle tasks
+    placeholders = ['readOnlyUsername': 'wordcount_read', 'readOnlyPassword': 'r3@d3r']
 }
 
 spotbugs {
@@ -97,6 +109,7 @@ test {
 
 tasks.check.dependsOn(tasks.dependencyCheckAnalyze)
 
+apply from: "${rootDir}/gradle/database.gradle"
 apply from: "${rootDir}/gradle/jacoco.gradle"
 
 
@@ -143,30 +156,36 @@ dependencies {
 
     implementation "commons-io:commons-io:${versions.commonsIO}"
 
+    implementation "mysql:mysql-connector-java:${versions.mysql}"
+
     implementation "org.apache.httpcomponents:httpclient:${versions.httpClient}"
 
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${versions.tomcatEmbed}"
     implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${versions.tomcatEmbed}"
-    implementation "org.yaml:snakeyaml:${versions.snakeyaml}"
+
+    implementation "org.flywaydb:flyway-core:${versions.flyway}"
 
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
 
-
     implementation "org.springdoc:springdoc-openapi-ui:${versions.openApi}"
 
-    compileOnly "org.springframework.boot:spring-boot-starter-validation"
 
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${versions.springBoot}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${versions.springBoot}"
     implementation "org.springframework.boot:spring-boot-starter-security:${versions.springBoot}"
     implementation "org.springframework.boot:spring-boot-starter-web:${versions.springBoot}"
+
+
+    implementation "org.yaml:snakeyaml:${versions.snakeyaml}"
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:${versions.springBoot}") {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
-    testImplementation  "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
-
     testImplementation "org.codehaus.groovy:groovy-all:${versions.groovy}"
+    testImplementation  "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
     testImplementation  "org.spockframework:spock-core:${versions.spock}"
     testImplementation  "org.spockframework:spock-spring:${versions.spock}"
     testImplementation  'org.springframework.boot:spring-boot-starter-test'
