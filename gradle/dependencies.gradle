@@ -1,8 +1,10 @@
 ext {
     versions = [
+            cacheApi: '1.1.1',
             checkstyle: '8.45.1',
             commonsIO: '2.11.0',
             dependencyCheck: '7.1.0.1',
+            ehcache: '3.8.1',
             flyway: '7.14.1',
             groovy: '3.0.18',
             httpClient: '4.5.13',

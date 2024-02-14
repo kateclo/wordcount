@@ -156,12 +156,17 @@ dependencies {
 
     implementation "commons-io:commons-io:${versions.commonsIO}"
 
+    implementation("javax.cache:cache-api:${versions.cacheApi}")
+
+
     implementation "mysql:mysql-connector-java:${versions.mysql}"
 
     implementation "org.apache.httpcomponents:httpclient:${versions.httpClient}"
 
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${versions.tomcatEmbed}"
     implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${versions.tomcatEmbed}"
+
+    implementation("org.ehcache:ehcache:${versions.ehcache}")
 
     implementation "org.flywaydb:flyway-core:${versions.flyway}"
 
@@ -171,6 +176,7 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-ui:${versions.openApi}"
 
 
+    implementation("org.springframework.boot:spring-boot-starter-cache:${versions.springBoot}")
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:${versions.springBoot}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${versions.springBoot}"
     implementation "org.springframework.boot:spring-boot-starter-security:${versions.springBoot}"

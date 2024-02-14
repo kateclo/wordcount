@@ -12,11 +12,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
+import java.util.Objects;
 
 
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WordCountRequest {
+public class WordCountRequest implements Serializable {
     public static final String FREQUENCY_PARAM_NAME = "k_value";
     public static final String SOURCE_PARAM_NAME = "source";
     public static final int MIN_FREQUENCY_VALUE = 1;
@@ -30,6 +32,24 @@ public class WordCountRequest {
     @JsonProperty("k_value")
     private Integer frequency;
 
+
+    @Override
+    public boolean equals(Object objToCheck) {
+        if (this == objToCheck) return true;
+        if (objToCheck == null || getClass() != objToCheck.getClass()) return false;
+
+        WordCountRequest countRequest = (WordCountRequest) objToCheck;
+        if (source != null) {
+            return source.equalsIgnoreCase(countRequest.source) && Objects.equals(frequency, countRequest.frequency);
+        } else {
+            return Objects.equals(null, countRequest.source) && Objects.equals(frequency, countRequest.frequency);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(source, frequency);
+    }
 
     public void setSource(String newValue) {
         if (newValue != null) {
