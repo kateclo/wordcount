@@ -3,7 +3,7 @@ CREATE USER '${readOnlyUsername}'@'%' IDENTIFIED BY '${readOnlyPassword}';
 CREATE TABLE `users`
 (
     `username`              VARCHAR(50)  NOT NULL,
-    `password`              CHAR(68)  NOT NULL,
+    `password`              CHAR(60)  NOT NULL,
     `enabled`               TINYINT NOT NULL,
     PRIMARY KEY (`username`)
 ) ENGINE = InnoDB
@@ -13,7 +13,7 @@ CREATE TABLE `users`
 CREATE TABLE `authorities`
 (
     `username`               VARCHAR(50)  NOT NULL,
-    `authority`              CHAR(68)  NOT NULL,
+    `authority`              CHAR(50)  NOT NULL,
     CONSTRAINT UC_Authorities UNIQUE (`username`, `authority`),
     CONSTRAINT FK_User FOREIGN KEY (`username`) REFERENCES `users` (`username`)
 ) ENGINE = InnoDB
@@ -26,5 +26,5 @@ INSERT INTO `users` VALUES
 
 INSERT INTO `authorities` VALUES
 ('epassi', 'ROLE_USER'),
-('admin', 'ROLE_USER')
+('admin', 'ROLE_USER'),
 ('admin', 'ROLE_ADMIN');
