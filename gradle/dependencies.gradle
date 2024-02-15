@@ -22,6 +22,7 @@ ext {
             springBoot: '2.7.18',
             springDataEnvers: '2.4.0',
             springTest: '5.3.12',
+            springSecurityTest: '6.2.1',
             tomcatEmbed: '9.0.84'
     ]
 }

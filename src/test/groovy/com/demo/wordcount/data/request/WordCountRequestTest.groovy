@@ -19,6 +19,15 @@ class WordCountRequestTest extends Specification {
         request.frequency == null
     }
 
+    def "should be able to create instance using an all-args constructor" () {
+        when:
+        WordCountRequest request = new WordCountRequest("abc123", 789)
+
+        then:
+        request.source == "abc123"
+        request.frequency == 789
+    }
+
     def "should be able to set value using setters and retrieve using getters"() {
         given:
         WordCountRequest request = new WordCountRequest()
@@ -31,6 +40,71 @@ class WordCountRequestTest extends Specification {
         request.getSource() == "some source value"
         request.getFrequency() == 123
     }
+
+    @Unroll
+    def "should be able to return #expResult when comparing the current request to a #scenario"() {
+        given:
+        WordCountRequest request = new WordCountRequest()
+        request.setSource("abc.txt")
+        request.setFrequency(50)
+
+
+        when:
+        boolean result = request.equals(newRequest)
+
+        then:
+        result == expResult
+
+        where:
+        scenario                           | newRequest                            || expResult
+        "null request"                     | null                                  || false
+        "request with different source"    | new WordCountRequest("abc.png", 50)   || false
+        "request with different frequency" | new WordCountRequest("abc.txt", 0)    || false
+        "request with null source"         | new WordCountRequest(null, 50)        || false
+        "request with null frequency"      | new WordCountRequest("abc.txt", null) || false
+        "request with same values"         | new WordCountRequest("abc.txt", 50)   || true
+
+    }
+
+    @Unroll
+    def "should be able to return #expResult when comparing the current request (with null source) to a #scenario"() {
+        given:
+        WordCountRequest request = new WordCountRequest()
+        request.setSource(null)
+        request.setFrequency(50)
+
+
+        when:
+        boolean result = request.equals(newRequest)
+
+        then:
+        result == expResult
+
+        where:
+        scenario                           | newRequest                            || expResult
+        "null request"                     | null                                  || false
+        "request with different source"    | new WordCountRequest("abc.png", 50)   || false
+        "request with different frequency" | new WordCountRequest("abc.txt", 0)    || false
+        "request with null source"         | new WordCountRequest(null, 50)        || true
+        "request with null frequency"      | new WordCountRequest("abc.txt", null) || false
+    }
+
+
+    def "should be able to return true when comparing the current request to itself"() {
+        given:
+        WordCountRequest request = new WordCountRequest()
+        request.setSource("abc.txt")
+        request.setFrequency(50)
+
+
+        when:
+        boolean result = request.equals(request)
+
+        then:
+        result
+    }
+
+
 
 
     @Unroll

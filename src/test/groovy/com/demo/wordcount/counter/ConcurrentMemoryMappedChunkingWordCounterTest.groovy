@@ -52,7 +52,7 @@ class ConcurrentMemoryMappedChunkingWordCounterTest extends Specification {
         where:
         scenario                         | fileValue                                        | frequencyValue || expectedSize | expectedMap
         "example.txt"                    | Paths.get(FILES_DIR).resolve("example.txt")      | 2               | 2            | ['example': 3, 'and': 2]
-        "abc.txt (different word forms)" | Paths.get(FILES_DIR).resolve("abc.txt")          | 5               | 3            | ['abc': 6, 'abc123abc': 2, 'abc123': 1]
+        "abc.txt (different word forms)" | Paths.get(FILES_DIR).resolve("abc.txt")          | 5               | 4            | ['abc': 6, '123abc':3, 'abc123abc': 2, 'abc123': 1]
         "holmes.txt (large file)"        | Paths.get(FILES_DIR).resolve("holmes.txt")       | 5               | 5            | ['the': 5632, 'i': 3036, 'and': 3020, 'to': 2747, 'of': 2660]
     }
 
@@ -94,7 +94,7 @@ class ConcurrentMemoryMappedChunkingWordCounterTest extends Specification {
         scenario                                               | fileValue                                                                        | frequencyValue || expectedSize | expectedMap
         "buffer was not chunked"                               | Paths.get(FILES_DIR).resolve("buffer-test_less-than-max-buffer-capacity-50.txt") | 5               | 3            | ['hi': 4, 'hello': 3, 'hei': 1]
         "buffer was chunked, last word size = max word length" | Paths.get(FILES_DIR).resolve("buffer-test_equal-to-max-buffer-capacity-50.txt")  | 5               | 3            | ['a': 6, 'once': 3, 'abcdefghijklmnopqrstuv': 1]
-        "buffer was chunked, last word size > max word length" | Paths.get(FILES_DIR).resolve("buffe-test_more-than-max-buffer-capacity-50.txt")  | 5               | 4            | ['once': 3, 'tuvwxyzab': 2, 'abcdefghijklmn': 1, 'thiswillbecutoff': 1]
+        "buffer was chunked, last word size > max word length" | Paths.get(FILES_DIR).resolve("buffer-test_more-than-max-buffer-capacity-50.txt") | 5               | 4            | ['once': 3, 'tuvwxyzab': 2, 'abcdefghijklmn': 1, 'thiswillbecutoff': 1]
 
     }
 

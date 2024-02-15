@@ -106,6 +106,7 @@ class UrlUtilTest extends Specification {
         "null destination dir"                                          | "https://abc.com"                                      | null
         "null values"                                                   | null                                                   | null
         "empty web url"                                                 | ""                                                     | OUTPUTS_DIR
+        "web url does not exist"                                        | "https://fdsfdsfdfserew.com/sfdfdfdgersf.txt"          | OUTPUTS_DIR
         "destination dir does not exist"                                | "https://www.gutenberg.org/cache/epub/2347/pg2347.txt" | Paths.get(OUTPUTS_DIR).resolve(RandomStringUtils.randomAlphanumeric(10)).toString()
         "webUrl is a dir url, and that dir in destination is non-empty" | "https://www.gutenberg.org/cache/epub/2347/"           | TEST_DATA_DIR
 
