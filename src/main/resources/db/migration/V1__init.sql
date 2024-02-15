@@ -21,10 +21,10 @@ CREATE TABLE `authorities`
 
 
 INSERT INTO `users` VALUES
-('epassi', '$2a$10$/Kds1Y3jLBjRrBw/8sOKeOtEpAiqgeZZ//XxZehVn9FftnnobuQD.', 1),
+('tester', '$2a$10$m1CC9TIBp9qXj/P0m2v1I.4.HgjMjqh4PZhfmaNQ/VqKkP4GfooQ6', 1),
 ('admin', '$2a$10$tC2MWdj.VzM/c1m03mjHb.eya9swuND8lbEd9odINoIy2uheUoGvm', 1);
 
 INSERT INTO `authorities` VALUES
-('epassi', 'ROLE_USER'),
+('tester', 'ROLE_USER'),
 ('admin', 'ROLE_USER'),
 ('admin', 'ROLE_ADMIN');
