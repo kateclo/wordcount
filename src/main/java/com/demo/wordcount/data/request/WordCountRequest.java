@@ -7,6 +7,7 @@ import com.demo.wordcount.exception.RequiredValueException;
 import com.demo.wordcount.exception.UnsupportedFileTypeException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,8 +18,11 @@ import java.util.Objects;
 
 
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WordCountRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     public static final String FREQUENCY_PARAM_NAME = "k_value";
     public static final String SOURCE_PARAM_NAME = "source";
     public static final int MIN_FREQUENCY_VALUE = 1;
@@ -35,8 +39,13 @@ public class WordCountRequest implements Serializable {
 
     @Override
     public boolean equals(Object objToCheck) {
-        if (this == objToCheck) return true;
-        if (objToCheck == null || getClass() != objToCheck.getClass()) return false;
+        if (this == objToCheck) {
+            return true;
+        }
+
+        if (objToCheck == null || getClass() != objToCheck.getClass()) {
+            return false;
+        }
 
         WordCountRequest countRequest = (WordCountRequest) objToCheck;
         if (source != null) {
