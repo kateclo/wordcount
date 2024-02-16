@@ -15,9 +15,11 @@ class WordCountServiceTest extends Specification {
     private static final String FILES_DIR = Paths.get(System.getProperty("user.dir")).resolve("src").resolve("test")
             .resolve("resources").resolve("test-data").resolve("files").toString()
 
+    private static final String ABC_TXT = Paths.get(System.getProperty("user.dir")).resolve("src").resolve("test")
+            .resolve("resources").resolve("test-data").resolve("files").resolve("abc.txt").toString()
+
     WordCountService wordCountService
 
-    ConcurrentMemoryMappedChunkingWordCounter counter
 
     def setup() {
         wordCountService = new WordCountService()
@@ -27,11 +29,9 @@ class WordCountServiceTest extends Specification {
     }
 
     @Unroll
-    def "should be able to count when source is #scenario"() {
+    def "should count words when source is #scenario"() {
         given:
-        WordCountRequest request = new WordCountRequest()
-        request.setSource(Paths.get(FILES_DIR).resolve("abc.txt").toString())
-        request.setFrequency(5)
+        WordCountRequest request = new WordCountRequest(ABC_TXT, 5)
 
         and:
         wordCountService.counterMode = counterModeVal
@@ -44,10 +44,11 @@ class WordCountServiceTest extends Specification {
 
         where:
         scenario     | sourceVal                                              | counterModeVal
-        "from local" | Paths.get(FILES_DIR).resolve("abc.txt").toString()     | "CONCURRENT_CHUNKED"
+        "from local" | ABC_TXT                                                | "CONCURRENT_CHUNKED"
         "from url"   | "https://www.gutenberg.org/cache/epub/2347/pg2347.txt" | "CONCURRENT_CHUNKED"
-        "from local" | Paths.get(FILES_DIR).resolve("abc.txt").toString()     | "CONCURRENT"
+        "from local" | ABC_TXT                                                | "CONCURRENT"
         "from url"   | "https://www.gutenberg.org/cache/epub/2347/pg2347.txt" | "CONCURRENT"
+
     }
 
     @Unroll
@@ -62,11 +63,12 @@ class WordCountServiceTest extends Specification {
         thrown expException
 
         where:
-        scenario                                        | requestVal                                                                                               || expException
-        "null request"                                  | null                                                                                                     || NullPointerException
-        "request has a validation error in source"      | new WordCountRequest("abc.data", 5)                                                                      || IllegalArgumentException
-        "request has a validation error in frequency"   | new WordCountRequest("xyz.txt", -1)                                                                      || IllegalArgumentException
-        "downloading a file that doesn't exist"         | new WordCountRequest(Paths.get(FILES_DIR).resolve(RandomStringUtils.randomAlphabetic(10)).toString(), 5) || IllegalArgumentException
+        scenario                                      | requestVal                                                                                               || expException
+        "null request"                                | null                                                                                                     || NullPointerException
+        "request has a validation error in source"    | new WordCountRequest("abc.data", 5)                                                                      || IllegalArgumentException
+        "request has a validation error in frequency" | new WordCountRequest("xyz.txt", -1)                                                                      || IllegalArgumentException
+        "downloading a file that doesn't exist"       | new WordCountRequest(Paths.get(FILES_DIR).resolve(RandomStringUtils.randomAlphabetic(10)).toString(), 5) || IllegalArgumentException
+
     }
 
 
@@ -89,9 +91,9 @@ class WordCountServiceTest extends Specification {
 
         where:
         scenario                                        | downloadsDir | modeVal                                         | sourceVal
-        "downloads dir is null"                         | null         | new ConcurrentMemoryMappedChunkingWordCounter() | Paths.get(FILES_DIR).resolve("abc.txt").toString()
+        "downloads dir is null"                         | null         | new ConcurrentMemoryMappedChunkingWordCounter() | ABC_TXT
         "downloading a file that is not supported link" | "downloads"  | "CONCURRENT_CHUNKED"                            | "https://ddsdsadslfdsf.com/sdsfdfd.txt"
-        "counter mode is not supported"                 | "downloads"  | "DKjdjfdlfkdsdffldjfdlf"                        | Paths.get(FILES_DIR).resolve("abc.txt").toString()
+        "counter mode is not supported"                 | "downloads"  | "DKjdjfdlfkdsdffldjfdlf"                        | ABC_TXT
 
     }
 

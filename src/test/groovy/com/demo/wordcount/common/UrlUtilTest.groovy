@@ -26,6 +26,7 @@ class UrlUtilTest extends Specification {
             .resolve("resources").resolve("test-data").resolve("temp").toString()
 
     def setupSpec() {
+        Files.createDirectories(Paths.get(OUTPUTS_DIR))
         Files.createDirectories(Paths.get(TEMP_DIR).resolve("2347"))
     }
 

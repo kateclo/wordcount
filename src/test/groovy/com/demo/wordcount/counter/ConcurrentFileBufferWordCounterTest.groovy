@@ -46,9 +46,9 @@ class ConcurrentFileBufferWordCounterTest extends Specification {
 
         where:
         scenario                         | fileValue                                   | frequencyValue || expectedSize | expectedMap
-        "example.txt"                    | Paths.get(FILES_DIR).resolve("example.txt") | 2               | 2            | ['example': 3, 'and': 2]
-        "abc.txt (different word forms)" | Paths.get(FILES_DIR).resolve("abc.txt")     | 5               | 4            | ['abc': 6, '123abc':3, 'abc123abc': 2, 'abc123': 1]
-        "holmes.txt (large file)"        | Paths.get(FILES_DIR).resolve("holmes.txt")  | 5               | 5            | ['the': 5632, 'i': 3036, 'and': 3020, 'to': 2747, 'of': 2660]
+        "example.txt"                    | Paths.get(FILES_DIR).resolve("example.txt") | 2              || 2            | ['example': 3, 'and': 2]
+        "abc.txt (different word forms)" | Paths.get(FILES_DIR).resolve("abc.txt")     | 5              || 4            | ['abc': 6, '123abc': 3, 'abc123abc': 2, 'abc123': 1]
+        "holmes.txt (large file)"        | Paths.get(FILES_DIR).resolve("holmes.txt")  | 5              || 5            | ['the': 5632, 'i': 3036, 'and': 3020, 'to': 2747, 'of': 2660]
 
     }
 
@@ -88,6 +88,7 @@ class ConcurrentFileBufferWordCounterTest extends Specification {
         countMap.get("klmn") == 2
         countMap.get("opqr") == 1
         countMap.get("78stu") == 1
+
     }
 
     def "should be able to update count map"() {
@@ -109,6 +110,7 @@ class ConcurrentFileBufferWordCounterTest extends Specification {
         countMap.get("klmn") == 2
         countMap.get("opqr") == 1
         countMap.get("78stu") == 1
+
     }
 
     @Unroll
@@ -129,6 +131,7 @@ class ConcurrentFileBufferWordCounterTest extends Specification {
         "empty"         | ""
         "all spaces"    | "             "
         "all non-words" | ", ? . # % & _ ! @ \$ ^ * ( ) - _ + =   "
+
     }
 
 }

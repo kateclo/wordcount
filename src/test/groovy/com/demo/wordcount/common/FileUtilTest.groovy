@@ -26,6 +26,10 @@ class FileUtilTest extends Specification {
                     .resolve("resources").resolve("test-data").toString()
 
 
+    def setupSpec() {
+        Files.createDirectories(Paths.get(OUTPUTS2_DIR))
+    }
+
     def cleanupSpec() {
         Path directoryPath = Paths.get(OUTPUTS2_DIR)
 

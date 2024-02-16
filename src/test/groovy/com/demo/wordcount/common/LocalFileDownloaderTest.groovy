@@ -17,6 +17,10 @@ class LocalFileDownloaderTest extends Specification {
     private static final String SAMPLE1_TXT_FILE = Paths.get(System.getProperty("user.dir")).resolve("src").resolve("test")
             .resolve("resources").resolve("test-data").resolve("2347").resolve("sample-1.txt").toString()
 
+    def setupSpec() {
+        Files.createDirectories(Paths.get(OUTPUTS3_DIR))
+    }
+
     def cleanupSpec() {
         Path directoryPath = Paths.get(OUTPUTS3_DIR)
 

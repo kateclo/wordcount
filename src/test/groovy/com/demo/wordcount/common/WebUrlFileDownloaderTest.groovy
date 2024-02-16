@@ -13,6 +13,10 @@ class WebUrlFileDownloaderTest extends Specification {
     private static final String OUTPUTS4_DIR = Paths.get(System.getProperty("user.dir")).resolve("src").resolve("test")
             .resolve("resources").resolve("test-data").resolve("outputs-4").toString()
 
+    def setupSpec() {
+        Files.createDirectories(Paths.get(OUTPUTS4_DIR))
+    }
+
     def cleanupSpec() {
         Path directoryPath = Paths.get(OUTPUTS4_DIR)
 
