@@ -7,6 +7,7 @@ import com.demo.wordcount.exception.RequiredValueException;
 import com.demo.wordcount.exception.UnsupportedFileTypeException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,10 +28,14 @@ public class WordCountRequest implements Serializable {
     public static final String SOURCE_PARAM_NAME = "source";
     public static final int MIN_FREQUENCY_VALUE = 1;
 
+    @Schema(description = "The txt file location. File must exists. Either accessible via local directory or a URL",
+            example = "https://valid.url.com/existingFile.txt OR D:\\windows\\file\\example.txt")
     @Getter
     @NotEmpty(message = "source must not be empty or null")
     private String source;
 
+    @Schema(description = "The number indicating the the top most words in the given txt file. Must be greater than 0, and whole number.",
+            example = "1")
     @Getter
     @Setter
     @JsonProperty("k_value")

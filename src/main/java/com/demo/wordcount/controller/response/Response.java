@@ -1,10 +1,16 @@
 package com.demo.wordcount.controller.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 public class Response<T> {
+
+    @Schema(description = "Output of the data processing")
     @Getter
     private final T data;
+
+    @Schema(description = "Contains the details of the encountered error or exception during data processing. " +
+            "Value is null if there are no errors.")
     @Getter
     private final Error error;
 

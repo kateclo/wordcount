@@ -1,5 +1,6 @@
 package com.demo.wordcount.data.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class WordCountResponse {
         }
     }
 
+    @Schema(description = "list of words and their number of occurrences in the file",
+            example = "[{\"word\":\"example\",\"count\":3}]")
     @Getter
     private final List<WordCountDetails> wordCountDetails;
 }
