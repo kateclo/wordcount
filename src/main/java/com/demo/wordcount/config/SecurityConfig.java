@@ -33,6 +33,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .mvcMatchers(HttpMethod.GET, "/").permitAll()
+                        .antMatchers("/swagger/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .mvcMatchers(HttpMethod.GET, "/api/demo/word-count/").hasAuthority("ROLE_USER")
                         .mvcMatchers(HttpMethod.GET, "/api/demo/**").hasAuthority("ROLE_ADMIN")
                         .mvcMatchers(HttpMethod.POST, "/api/demo/word-count/").hasAuthority("ROLE_USER")
