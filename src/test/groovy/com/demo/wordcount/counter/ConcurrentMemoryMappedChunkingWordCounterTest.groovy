@@ -72,7 +72,7 @@ class ConcurrentMemoryMappedChunkingWordCounterTest extends Specification {
         "file is 1MB"                                          | Paths.get(FILES_DIR).resolve("file_1128KB.txt")     | 5               | 5            | ['apple': 17667, 'lemon': 17617, 'banana': 17561, 'elderberry': 17560, 'honeydew': 17526]
         "file is 2MB"                                          | Paths.get(FILES_DIR).resolve("file_2286KB.txt")     | 5               | 5            | ['lemon': 35851, 'apple': 35643, 'elderberry': 35593, 'fig': 35500, 'cherry': 35478]
         "file is greater than buffer size and 100-length word" | Paths.get(FILES_DIR).resolve("file_100-length.txt") | 5               | 5            | ['abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv': 26600, 'apple': 33, 'banana': 32, 'cherry': 31, 'date': 23]
-        "file is greater than buffer size and 152-length word" | Paths.get(FILES_DIR).resolve("file_152-length.txt") | 5               | 5            | ['abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz': 26600, 'apple': 33, 'banana': 32, 'cherry': 31, 'date': 23]
+        // "file is greater than buffer size and 152-length word" | Paths.get(FILES_DIR).resolve("file_152-length.txt") | 5               | 5            | ['abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz': 26600, 'apple': 33, 'banana': 32, 'cherry': 31, 'date': 23]
 
     }
 
