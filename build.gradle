@@ -161,8 +161,6 @@ dependencies {
 
     implementation "mysql:mysql-connector-java:${versions.mysql}"
 
-    implementation "org.apache.httpcomponents:httpclient:${versions.httpClient}"
-
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${versions.tomcatEmbed}"
     implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${versions.tomcatEmbed}"
 

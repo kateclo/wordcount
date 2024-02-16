@@ -7,7 +7,6 @@ ext {
             ehcache: '3.8.1',
             flyway: '7.14.1',
             groovy: '3.0.18',
-            httpClient: '4.5.13',
             jackson: '2.13.2',
             jacksonBom: '2.13.2.20220324',
             jacksonDatabind: '2.13.2.1',

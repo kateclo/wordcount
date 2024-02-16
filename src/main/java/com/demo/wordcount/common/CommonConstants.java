@@ -1,6 +1,5 @@
 package com.demo.wordcount.common;
 
-import java.util.Locale;
 
 public class CommonConstants {
     public static final String EMPTY = "";
